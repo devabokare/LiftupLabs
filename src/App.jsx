@@ -8,6 +8,8 @@ import MainContent from './components/MainContent'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import EmailVerification from './pages/EmailVerification'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import './App.css'
 
 // Protected Route Component
@@ -63,9 +65,9 @@ function Dashboard() {
   const [activeSection, setActiveSection] = useState('home')
 
   return (
-    <div className="flex min-h-screen bg-orange-50">
+    <div className="flex h-screen bg-orange-50 overflow-hidden">
       <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
         <MainContent activeSection={activeSection} />
       </div>
@@ -102,6 +104,8 @@ function AppContent() {
         }
       />
       <Route path="/verify-email" element={<EmailVerification />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Protected Routes */}
       <Route

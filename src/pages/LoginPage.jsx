@@ -241,9 +241,9 @@ const LoginPage = ({ onLogin, onSwitchToRegister }) => {
                                                 />
                                                 <span className="text-sm text-gray-600">Keep me signed in</span>
                                             </label>
-                                            <button type="button" className="text-sm text-orange-600 hover:text-orange-700">
+                                            <Link to="/forgot-password" className="text-sm text-orange-600 hover:text-orange-700">
                                                 Forgot password?
-                                            </button>
+                                            </Link>
                                         </div>
 
                                         <button

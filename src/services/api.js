@@ -128,6 +128,18 @@ class ApiService {
         return this.post('/auth/resend-verification', { email });
     }
 
+    async forgotPassword(email) {
+        return this.post('/auth/forgot-password', { email });
+    }
+
+    async verifyResetToken(token) {
+        return this.post('/auth/verify-reset-token', { token });
+    }
+
+    async resetPassword(token, newPassword) {
+        return this.post('/auth/reset-password', { token, newPassword });
+    }
+
     // Event APIs
     async getEvents(filters = {}) {
         return this.get('/events', filters);
@@ -196,6 +208,11 @@ class ApiService {
 
     async updateUserStatus(userId, status) {
         return this.put(`/users/${userId}/status`, { isActive: status });
+    }
+
+    // Contact API
+    async submitContactForm(contactData) {
+        return this.post('/contact', contactData);
     }
 }
 
