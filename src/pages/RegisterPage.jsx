@@ -49,7 +49,12 @@ const RegisterPage = ({ onRegister }) => {
                 setUserEmail(formData.email)
                 setRegistrationSuccess(true)
             } else {
-                alert(result.error || 'Registration failed')
+                if (result.validationErrors && result.validationErrors.length > 0) {
+                    const errorMessages = result.validationErrors.map(err => `• ${err.msg}`).join('\n');
+                    alert(`Registration failed:\n${errorMessages}`);
+                } else {
+                    alert(result.error || 'Registration failed');
+                }
             }
         } catch (error) {
             console.error('Registration error:', error)

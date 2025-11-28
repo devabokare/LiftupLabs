@@ -10,6 +10,9 @@ const LoginPage = ({ onLogin, onSwitchToRegister }) => {
     })
     const [isLoading, setIsLoading] = useState(false)
     const [showVerificationMessage, setShowVerificationMessage] = useState(false)
+    const [isResending, setIsResending] = useState(false)
+    const [resendSuccess, setResendSuccess] = useState(false)
+    const [resendError, setResendError] = useState('')
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target
@@ -53,17 +56,32 @@ const LoginPage = ({ onLogin, onSwitchToRegister }) => {
     }
 
     const resendVerificationEmail = async () => {
+        if (!formData.email) {
+            setResendError('Please enter your email address first')
+            return
+        }
+
+        setIsResending(true)
+        setResendError('')
+        setResendSuccess(false)
+
         try {
             const data = await apiService.resendVerification(formData.email)
 
             if (data.success) {
-                alert('Verification email sent! Please check your inbox.')
+                setResendSuccess(true)
+                // Auto-hide success message after 5 seconds
+                setTimeout(() => {
+                    setResendSuccess(false)
+                }, 5000)
             } else {
-                alert(data.message || 'Failed to send verification email')
+                setResendError(data.message || 'Failed to send verification email')
             }
         } catch (error) {
             console.error('Resend error:', error)
-            alert('Network error. Please try again.')
+            setResendError(error.response?.data?.message || 'Network error. Please try again.')
+        } finally {
+            setIsResending(false)
         }
     }
 
@@ -185,17 +203,41 @@ const LoginPage = ({ onLogin, onSwitchToRegister }) => {
                                                         <p className="text-yellow-700 text-sm mt-1">
                                                             Please verify your email address before logging in. Check your inbox for the verification email.
                                                         </p>
+
+                                                        {/* Success Message */}
+                                                        {resendSuccess && (
+                                                            <div className="mt-3 bg-green-50 border border-green-200 rounded p-2">
+                                                                <p className="text-green-700 text-sm">
+                                                                    ✅ Verification email sent! Please check your inbox.
+                                                                </p>
+                                                            </div>
+                                                        )}
+
+                                                        {/* Error Message */}
+                                                        {resendError && (
+                                                            <div className="mt-3 bg-red-50 border border-red-200 rounded p-2">
+                                                                <p className="text-red-700 text-sm">
+                                                                    ❌ {resendError}
+                                                                </p>
+                                                            </div>
+                                                        )}
+
                                                         <div className="mt-3 space-x-2">
                                                             <button
                                                                 type="button"
                                                                 onClick={resendVerificationEmail}
-                                                                className="text-yellow-800 hover:text-yellow-900 font-medium text-sm underline"
+                                                                disabled={isResending}
+                                                                className="text-yellow-800 hover:text-yellow-900 font-medium text-sm underline disabled:opacity-50 disabled:cursor-not-allowed"
                                                             >
-                                                                Resend Verification Email
+                                                                {isResending ? '⏳ Sending...' : '📧 Resend Verification Email'}
                                                             </button>
                                                             <button
                                                                 type="button"
-                                                                onClick={() => setShowVerificationMessage(false)}
+                                                                onClick={() => {
+                                                                    setShowVerificationMessage(false)
+                                                                    setResendSuccess(false)
+                                                                    setResendError('')
+                                                                }}
                                                                 className="text-yellow-600 hover:text-yellow-700 text-sm"
                                                             >
                                                                 Dismiss
