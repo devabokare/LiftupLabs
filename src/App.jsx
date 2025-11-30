@@ -10,6 +10,7 @@ import RegisterPage from './pages/RegisterPage'
 import EmailVerification from './pages/EmailVerification'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import LandingPage from './pages/LandingPage'
 import './App.css'
 
 // Protected Route Component
@@ -54,7 +55,7 @@ function AuthRoute({ children }) {
   }
 
   if (user) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/dashboard" replace />
   }
 
   return children
@@ -81,6 +82,7 @@ function AppContent() {
   return (
     <Routes>
       {/* Public Routes */}
+      <Route path="/" element={<LandingPage />} />
       <Route
         path="/login"
         element={
@@ -109,7 +111,7 @@ function AppContent() {
 
       {/* Protected Routes */}
       <Route
-        path="/"
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <Dashboard />
@@ -117,7 +119,7 @@ function AppContent() {
         }
       />
 
-      {/* Redirect any unknown routes to home */}
+      {/* Redirect any unknown routes to landing page */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
